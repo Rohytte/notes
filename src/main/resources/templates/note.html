@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Note</title>
+    <style>
+        table,input,textarea,button,pre{
+            font-size:14px;
+            font-family: sans-serif;
+        }
+        pre{
+            border-radius: 2px;
+            border: 1px solid grey;
+            padding: 5px;
+            background: #f4f4f4;
+        }
+        a{
+            text-decoration:none;
+        }
+        .topbuttons{
+            cursor:pointer;
+        }
+        #zoomin{
+            cursor:zoom-in;
+        }
+        #zoomout{
+            cursor:zoom-out;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td>
+            <button class="topbuttons"><a href="/">New</a></button>
+            <button class="topbuttons" id="copy">Copy</button>
+            <button class="topbuttons" id="share">Share</button>
+            <button class="topbuttons" id="download">Download</button>
+            <button class="topbuttons" id="zoomin">Zoom in</button>
+            <button class="topbuttons" id="zoomout">Zoom out</button>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td>Note ID</td>
+        <td>
+            <button th:text="${note.id}" title="${note.id}"></button>
+        </td>
+    </tr>
+    <tr>
+        <td>Title</td>
+        <td><button th:text="${note.title}" title="${note.title}"></button></td>
+    </tr>
+    <tr>
+        <td>Created</td>
+        <td><button th:text="${note.creationDate}" title="${note.creationDate}"></button></td>
+    </tr>
+    <tr>
+        <td>Burns in</td>
+        <td><button th:text="${note.expiration}" title="${note.expiration}"></button></td>
+    </tr>
+</table>
+<table width="100%;">
+    <tr>
+        <td>
+            <pre id="content" th:text="${note.content}"></pre>
+        </td>
+    </tr>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    // Copy content to clipboard
+    $("#copy").click(function () {
+        var content = $("#content").text();
+        var textarea = $("<textarea></textarea>");
+        textarea.text(content);
+        $("body").append(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+    });
+
+// Download content as txt file with timestamp
+$("#download").click(function () {
+    var content = $("#content").text();
+    var timestamp = new Date().toLocaleString().replace(/:/g, "-").replace(/ /g, "_");
+    var filename = "note_" + timestamp + ".txt";
+    var element = document.createElement("a");
+    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(content));
+    element.setAttribute("download", filename);
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+});
+
+    // Share the URL
+    $("#share").click(function () {
+        var url = window.location.href;
+        var textarea = $("<textarea></textarea>");
+        textarea.text(url);
+        $("body").append(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        alert("URL copied to clipboard");
+    });
+
+    // Zoom in and out the content element
+    var originalFontSize = $("#content").css("font-size");
+    $("#zoomin").click(function () {
+        var currentFontSize = $("#content").css("font-size");
+        var newFontSize = parseInt(currentFontSize) * 1.1;
+        if (newFontSize < 50) {
+            $("#content").css("font-size", newFontSize);
+        }
+    });
+    $("#zoomout").click(function() {
+        var currentSize = parseInt($("#content").css("font-size"));
+        if (currentSize > 10) {
+            var newSize = currentSize - 2;
+            $("#content").css("font-size", newSize + "px");
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>

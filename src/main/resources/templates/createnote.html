@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>notes</title>
+    <style>
+textarea,table {
+  width: 100%;
+  height: 100vh;
+}
+    table,input,textarea,button{
+    font-size:14px;
+    font-family: sans-serif;}
+    textarea{
+    padding:5px;
+    }
+    button,input,select{
+    border: 1px solid black;
+    border-radius: 2px;
+    font-size: 14px;
+    }
+    select:focus {
+  outline: none;
+}
+    input:focus {
+  outline: none;
+}
+    .readonly {
+        background-color: #F2F2F2;
+        color: gray;
+        cursor: not-allowed;
+    }
+    button,select{
+    cursor:pointer;
+    }
+</style>
+    <script>
+    window.onload = function() {
+        document.getElementById('noteForm').reset();
+    };
+</script>
+
+</head>
+<body>
+<form method="post" th:action="@{/note/create}" id="noteForm">
+    <table>
+        <tr>
+            <td>
+                <input type="text" id="title" name="title" placeholder="Title" required autocomplete="off">
+                <button type="submit">Create</button>
+                <button type="reset">Reset</button>
+                <select id="expiration" name="expiration">
+                    <option value="1H">Burn in 1 Hour</option>
+                    <option value="1D">Burn in 1 Day</option>
+                    <option value="1W">Burn in 1 Week</option>
+                    <option value="1M">Burn in 1 Month</option>
+                    <option value="6M">Burn in 6 Months</option>
+                    <option value="NE">Never Burn</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><textarea id="content" name="content" placeholder="Type, you would like to keep and share" required autocomplete="off"></textarea></td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>
